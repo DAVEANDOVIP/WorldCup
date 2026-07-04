@@ -10,7 +10,7 @@
     --border:rgba(210,235,220,.09);
     --text:#f2f7f4;
     --muted:#9fb8ac;
-    --gold:#e9bf3f;
+    --gold:#221f17;
     --gold-text:#2a2107;
     --live:#e0473f;
     --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -301,8 +301,14 @@ function fmtKickoff(iso){
 
 function renderLive(){
   const list = document.getElementById('list');
-  // Only include matches we actually have a score for (live or finished)
-  const pool = FIXTURES.filter(m => m.hc && m.ac && LIVE[m.id] && LIVE[m.id].st !== 1);
+  // Only include matches we actually have a resolvable pair of teams AND
+  // score data for (live or finished). FIX: use teamCode() here instead of
+  // the raw m.hc/m.ac fields, since R16+ matches leave those blank and only
+  // resolve through ROUND16_FALLBACK / TEAM_CODES.
+  const pool = FIXTURES.filter(m => {
+    const h = teamCode('h', m), a = teamCode('a', m);
+    return h && a && LIVE[m.id] && LIVE[m.id].st !== 1;
+  });
   // live matches first, then most recently finished
   pool.sort((a,b) => {
     const sa = statusOf(a) === 3 ? 0 : 1, sb = statusOf(b) === 3 ? 0 : 1;
