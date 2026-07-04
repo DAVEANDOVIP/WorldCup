@@ -76,6 +76,37 @@
   @keyframes blink{50%{opacity:.35}}
   .minute{font-family:var(--mono);font-size:.6rem;color:var(--live);font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:.75rem}
+
+  @media (max-width: 480px){
+    :root{
+      --xat-nav: 46px;
+      --xat-right: 8px;
+      --pw: clamp(150px, 44vw, 190px);
+    }
+
+    #app{
+      top:calc(var(--xat-nav) + 4px);
+      max-height:min(300px, calc(100vh - var(--xat-nav) - 20px));
+    }
+
+    .tabs{padding:6px 6px 5px;gap:4px}
+    .tab{padding:6px 4px;font-size:.6rem;gap:4px}
+    .dot-live{width:6px;height:6px}
+
+    .match{padding:7px 2px}
+    .row{gap:4px}
+    .team{gap:4px;font-size:.7rem}
+    .flag{width:18px;height:18px}
+    .flag img{width:125%;height:125%}
+    .flag .emoji-fallback{font-size:18px}
+    .mid{min-width:46px;gap:2px}
+    .score{font-size:.9rem}
+    .ko{font-size:.72rem}
+    .cd{font-size:.54rem}
+    .pill{font-size:.5rem;padding:2px 6px}
+    .minute{font-size:.56rem}
+    .empty{padding:18px 6px;font-size:.72rem}
+  }
 </style>
 </head>
 <body>
