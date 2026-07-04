@@ -78,54 +78,63 @@
   .minute{font-family:var(--mono);font-size:.62rem;color:var(--live);font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:.75rem}
 
-  /* ── mobile: smaller, shorter box that doesn't swallow the screen ──
-     Triggers both on a real narrow viewport (@media) AND on
-     html[data-mobile="1"], which JS below sets using the phone's actual
-     screen.width. That second path keeps this working even when Chrome's
-     "Desktop site" mode fakes a wide viewport, which would make the plain
-     @media query miss on a real phone. */
+  /* ── mobile: smaller, taller box that fits more rows without scrolling,
+     and narrower so the whole card (incl. left flag) stays on-screen ── */
   @media (max-width: 480px) {
     :root{
-      /* Wider than before — grows only to the left since the box is
-         right-anchored (right:var(--xat-right) never changes). */
-      --pw: clamp(100px, 30vw, 130px);
+      /* Slightly narrower than before so the box doesn't run off the
+         left edge of the viewport (which was clipping the home-team
+         flag). Right edge stays pinned via --xat-right. */
+      --pw: clamp(88px, 26vw, 112px);
       --xat-nav: 46px;
       --xat-right: 8px;
     }
     #app{
-      /* Taller so more rows are visible before the list has to scroll —
-         there was empty space below the box before. */
-      max-height: min(230px, calc(100vh - var(--xat-nav) - 30px));
+      /* Taller — sized to comfortably fit ~4-5 rows without an inner
+         scrollbar, while still capping to the viewport height. */
+      max-height: min(340px, calc(100vh - var(--xat-nav) - 20px));
       border-radius: 10px;
     }
     .tabs{padding:4px 4px 3px;gap:3px}
-    .tab{font-size:.5rem;padding:3px 3px}
-    .team{font-size:.58rem;gap:3px}
-    .flag{width:18px;height:18px}
+    .tab{font-size:.48rem;padding:3px 2px}
+    .list{padding:2px 4px 4px}
+    .match{padding:5px 0}
+    .row{gap:2px}
+    .team{font-size:.54rem;gap:2px}
+    .flag{width:16px;height:16px}
     .flag img{width:150%;height:150%}
-    .score{font-size:.78rem}
-    .ko{font-size:.6rem}
+    .flag .emoji-fallback{font-size:14px}
+    .mid{min-width:38px;gap:2px}
+    .score{font-size:.7rem}
+    .ko{font-size:.56rem}
     .cd{font-size:.46rem}
-    .pill{font-size:.44rem;padding:1px 4px}
+    .pill{font-size:.4rem;padding:1px 3px}
+    .minute{font-size:.44rem}
   }
   html[data-mobile="1"]{
-    --pw: clamp(100px, 30vw, 130px) !important;
+    --pw: clamp(88px, 26vw, 112px) !important;
     --xat-nav: 46px !important;
     --xat-right: 8px !important;
   }
   html[data-mobile="1"] #app{
-    max-height: min(230px, calc(100vh - var(--xat-nav) - 30px)) !important;
+    max-height: min(340px, calc(100vh - var(--xat-nav) - 20px)) !important;
     border-radius: 10px !important;
   }
   html[data-mobile="1"] .tabs{padding:4px 4px 3px !important;gap:3px !important}
-  html[data-mobile="1"] .tab{font-size:.5rem !important;padding:3px 3px !important}
-  html[data-mobile="1"] .team{font-size:.58rem !important;gap:3px !important}
-  html[data-mobile="1"] .flag{width:18px !important;height:18px !important}
+  html[data-mobile="1"] .tab{font-size:.48rem !important;padding:3px 2px !important}
+  html[data-mobile="1"] .list{padding:2px 4px 4px !important}
+  html[data-mobile="1"] .match{padding:5px 0 !important}
+  html[data-mobile="1"] .row{gap:2px !important}
+  html[data-mobile="1"] .team{font-size:.54rem !important;gap:2px !important}
+  html[data-mobile="1"] .flag{width:16px !important;height:16px !important}
   html[data-mobile="1"] .flag img{width:150% !important;height:150% !important}
-  html[data-mobile="1"] .score{font-size:.78rem !important}
-  html[data-mobile="1"] .ko{font-size:.6rem !important}
+  html[data-mobile="1"] .flag .emoji-fallback{font-size:14px !important}
+  html[data-mobile="1"] .mid{min-width:38px !important;gap:2px !important}
+  html[data-mobile="1"] .score{font-size:.7rem !important}
+  html[data-mobile="1"] .ko{font-size:.56rem !important}
   html[data-mobile="1"] .cd{font-size:.46rem !important}
-  html[data-mobile="1"] .pill{font-size:.44rem !important;padding:1px 4px !important}
+  html[data-mobile="1"] .pill{font-size:.4rem !important;padding:1px 3px !important}
+  html[data-mobile="1"] .minute{font-size:.44rem !important}
 </style>
 </head>
 <body>
@@ -354,7 +363,8 @@ function renderUpcoming(){
   tickCountdowns();
 }
 
-// Updates every ".cd[data-k]" element with a live "Empieza en …" countdown.
+// Updates every ".cd[data-k]" element with a compact live countdown
+// (no "Empieza en" label — just the number, kept short so it always fits).
 function tickCountdowns(){
   const now = Date.now();
   document.querySelectorAll('.cd[data-k]').forEach(el => {
@@ -364,9 +374,9 @@ function tickCountdowns(){
     const hh = Math.floor(diff % 86400000 / 3600000);
     const mm = Math.floor(diff % 3600000 / 60000);
     const ss = Math.floor(diff % 60000 / 1000);
-    if(dd > 0)      el.textContent = `Empieza en ${dd}d ${hh}h`;
-    else if(hh > 0) el.textContent = `Empieza en ${hh}h ${String(mm).padStart(2,'0')}m`;
-    else            el.textContent = `Empieza en ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+    if(dd > 0)      el.textContent = `${dd}d ${hh}h`;
+    else if(hh > 0) el.textContent = `${hh}h ${String(mm).padStart(2,'0')}m`;
+    else            el.textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
   });
 }
 
