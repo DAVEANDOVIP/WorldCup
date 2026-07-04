@@ -60,10 +60,10 @@
   .team{display:flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem;min-width:0}
   .team.away{justify-content:flex-end}
   .team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  /* Flag circle: PNGs are scaled down so they fit the circle without feeling oversized */
-  .flag{position:relative;width:20px;height:20px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#0004;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
-  .flag img{position:absolute;top:50%;left:50%;width:120%;height:120%;transform:translate(-50%,-50%);object-fit:cover}
-  .flag .emoji-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;transform:scale(1.05,1.7)}
+  /* Flag circle: image is zoomed/cropped to fully cover the circle, no letterboxing */
+  .flag{position:relative;width:22px;height:22px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#0004;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
+  .flag img{position:absolute;top:50%;left:50%;width:190%;height:190%;transform:translate(-50%,-50%);object-fit:cover}
+  .flag .emoji-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;transform:scale(1.05,1.7)}
   .mid{text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:56px}
   .score{font-family:var(--mono);font-weight:800;font-size:1.05rem;color:var(--gold);letter-spacing:.02em}
   .score.live-score{color:#fff}
@@ -77,68 +77,66 @@
   .minute{font-family:var(--mono);font-size:.6rem;color:var(--live);font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:.75rem}
 
-  html[data-mobile="1"]{
-    --xat-nav: 46px;
-    --xat-right: 8px;
-    --pw: clamp(75px, 22vw, 95px);
-  }
-
-  html[data-mobile="1"] #app{
-    top:calc(var(--xat-nav) + 4px);
-    max-height:min(150px, calc(100vh - var(--xat-nav) - 20px));
-  }
-
-  html[data-mobile="1"] .tabs{padding:4px 4px 3px;gap:3px}
-  html[data-mobile="1"] .tab{padding:4px 3px;font-size:.5rem;gap:3px}
-  html[data-mobile="1"] .dot-live{width:5px;height:5px}
-
-  html[data-mobile="1"] .match{padding:5px 2px}
-  html[data-mobile="1"] .row{gap:3px}
-  html[data-mobile="1"] .team{gap:3px;font-size:.6rem}
-  html[data-mobile="1"] .flag{width:14px;height:14px}
-  html[data-mobile="1"] .flag img{width:135%;height:135%}
-  html[data-mobile="1"] .flag .emoji-fallback{font-size:14px}
-  html[data-mobile="1"] .mid{min-width:34px;gap:2px}
-  html[data-mobile="1"] .score{font-size:.72rem}
-  html[data-mobile="1"] .ko{font-size:.58rem}
-  html[data-mobile="1"] .cd{font-size:.46rem}
-  html[data-mobile="1"] .pill{font-size:.42rem;padding:1px 4px}
-  html[data-mobile="1"] .minute{font-size:.48rem}
-  html[data-mobile="1"] .empty{padding:12px 4px;font-size:.62rem}
-
-  @media (max-width: 480px){
+  /* ── mobile: smaller, shorter box that doesn't swallow the screen ──
+     Triggers both on a real narrow viewport (@media) AND on
+     html[data-mobile="1"], which JS below sets using the phone's actual
+     screen.width. That second path keeps this working even when Chrome's
+     "Desktop site" mode fakes a wide viewport, which would make the plain
+     @media query miss on a real phone. */
+  @media (max-width: 480px) {
     :root{
+      --pw: clamp(75px, 22vw, 95px);
       --xat-nav: 46px;
       --xat-right: 8px;
-      --pw: clamp(75px, 22vw, 95px);
     }
-
     #app{
-      top:calc(var(--xat-nav) + 4px);
-      max-height:min(150px, calc(100vh - var(--xat-nav) - 20px));
+      max-height: min(150px, calc(100vh - var(--xat-nav) - 30px));
+      border-radius: 10px;
     }
-
     .tabs{padding:4px 4px 3px;gap:3px}
-    .tab{padding:4px 3px;font-size:.5rem;gap:3px}
-    .dot-live{width:5px;height:5px}
-
-    .match{padding:5px 2px}
-    .row{gap:3px}
-    .team{gap:3px;font-size:.6rem}
+    .tab{font-size:.48rem;padding:3px 3px}
+    .team{font-size:.56rem}
     .flag{width:14px;height:14px}
-    .flag img{width:135%;height:135%}
-    .flag .emoji-fallback{font-size:14px}
-    .mid{min-width:34px;gap:2px}
+    .flag img{width:140%;height:140%}
     .score{font-size:.72rem}
-    .ko{font-size:.58rem}
-    .cd{font-size:.46rem}
+    .ko{font-size:.56rem}
+    .cd{font-size:.44rem}
     .pill{font-size:.42rem;padding:1px 4px}
-    .minute{font-size:.48rem}
-    .empty{padding:12px 4px;font-size:.62rem}
   }
+  html[data-mobile="1"]{
+    --pw: clamp(75px, 22vw, 95px) !important;
+    --xat-nav: 46px !important;
+    --xat-right: 8px !important;
+  }
+  html[data-mobile="1"] #app{
+    max-height: min(150px, calc(100vh - var(--xat-nav) - 30px)) !important;
+    border-radius: 10px !important;
+  }
+  html[data-mobile="1"] .tabs{padding:4px 4px 3px !important;gap:3px !important}
+  html[data-mobile="1"] .tab{font-size:.48rem !important;padding:3px 3px !important}
+  html[data-mobile="1"] .team{font-size:.56rem !important}
+  html[data-mobile="1"] .flag{width:14px !important;height:14px !important}
+  html[data-mobile="1"] .flag img{width:140% !important;height:140% !important}
+  html[data-mobile="1"] .score{font-size:.72rem !important}
+  html[data-mobile="1"] .ko{font-size:.56rem !important}
+  html[data-mobile="1"] .cd{font-size:.44rem !important}
+  html[data-mobile="1"] .pill{font-size:.42rem !important;padding:1px 4px !important}
 </style>
 </head>
 <body>
+<script>
+  // "Desktop site" mode in mobile browsers fakes a wide viewport (~980px),
+  // which fools plain @media (max-width) queries. screen.width reflects the
+  // device's real hardware width regardless of that mode, so we use it as
+  // a fallback signal and flag <html> so the CSS above can react to it too.
+  (function(){
+    try{
+      if (window.screen.width <= 480 || window.innerWidth <= 480) {
+        document.documentElement.setAttribute('data-mobile', '1');
+      }
+    }catch(e){}
+  })();
+</script>
 <div id="app">
   <div class="topbar"></div>
   <div class="tabs">
@@ -157,7 +155,7 @@
 /* =========================================================================
    CONFIG — adjust these lines to match your local "flags" folder
    ========================================================================= */
-const FLAG_PATH = code => `flag/${code}.png`;
+const FLAG_PATH = code => `flag/${code}.png`;   // local folder in the repo
 
 // Emoji fallback used only if a flag image fails to load (folder missing / typo)
 const EMOJI_FALLBACK = {
@@ -370,14 +368,6 @@ function tickCountdowns(){
 const tabLive = document.getElementById('tabLive');
 const tabUpcoming = document.getElementById('tabUpcoming');
 let currentTab = 'live';
-
-function applyMobileState(){
-  const isPhone = window.matchMedia('(max-width: 480px)').matches || (window.screen && window.screen.width <= 480);
-  document.documentElement.setAttribute('data-mobile', isPhone ? '1' : '0');
-}
-
-applyMobileState();
-window.addEventListener('resize', applyMobileState);
 
 function render(){ currentTab === 'live' ? renderLive() : renderUpcoming(); }
 
