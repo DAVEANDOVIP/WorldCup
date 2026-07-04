@@ -77,6 +77,35 @@
   .minute{font-family:var(--mono);font-size:.6rem;color:var(--live);font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:.75rem}
 
+  html[data-mobile="1"]{
+    --xat-nav: 46px;
+    --xat-right: 8px;
+    --pw: clamp(150px, 44vw, 190px);
+  }
+
+  html[data-mobile="1"] #app{
+    top:calc(var(--xat-nav) + 4px);
+    max-height:min(300px, calc(100vh - var(--xat-nav) - 20px));
+  }
+
+  html[data-mobile="1"] .tabs{padding:6px 6px 5px;gap:4px}
+  html[data-mobile="1"] .tab{padding:6px 4px;font-size:.6rem;gap:4px}
+  html[data-mobile="1"] .dot-live{width:6px;height:6px}
+
+  html[data-mobile="1"] .match{padding:7px 2px}
+  html[data-mobile="1"] .row{gap:4px}
+  html[data-mobile="1"] .team{gap:4px;font-size:.7rem}
+  html[data-mobile="1"] .flag{width:18px;height:18px}
+  html[data-mobile="1"] .flag img{width:125%;height:125%}
+  html[data-mobile="1"] .flag .emoji-fallback{font-size:18px}
+  html[data-mobile="1"] .mid{min-width:46px;gap:2px}
+  html[data-mobile="1"] .score{font-size:.9rem}
+  html[data-mobile="1"] .ko{font-size:.72rem}
+  html[data-mobile="1"] .cd{font-size:.54rem}
+  html[data-mobile="1"] .pill{font-size:.5rem;padding:2px 6px}
+  html[data-mobile="1"] .minute{font-size:.56rem}
+  html[data-mobile="1"] .empty{padding:18px 6px;font-size:.72rem}
+
   @media (max-width: 480px){
     :root{
       --xat-nav: 46px;
@@ -341,6 +370,14 @@ function tickCountdowns(){
 const tabLive = document.getElementById('tabLive');
 const tabUpcoming = document.getElementById('tabUpcoming');
 let currentTab = 'live';
+
+function applyMobileState(){
+  const isPhone = window.matchMedia('(max-width: 480px)').matches || (window.screen && window.screen.width <= 480);
+  document.documentElement.setAttribute('data-mobile', isPhone ? '1' : '0');
+}
+
+applyMobileState();
+window.addEventListener('resize', applyMobileState);
 
 function render(){ currentTab === 'live' ? renderLive() : renderUpcoming(); }
 
