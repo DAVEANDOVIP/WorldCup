@@ -56,25 +56,26 @@
   .match{padding:8px 2px;border-bottom:1px solid rgba(255,255,255,.06)}
   .match:last-child{border-bottom:none}
   .match.live{background:rgba(224,71,63,.06)}
-  .row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}
-  .team{display:flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem;min-width:0}
-  .team.away{justify-content:flex-end}
-  .team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:4px}
+  /* Team block: flag stacked above the country code, centered */
+  .team{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;font-weight:800;font-size:.68rem;min-width:0}
+  .team.away{align-items:center}
+  .team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;text-align:center}
   /* Flag circle: image is zoomed/cropped to fully cover the circle, no letterboxing */
-  .flag{position:relative;width:22px;height:22px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#0004;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
+  .flag{position:relative;width:26px;height:26px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#0004;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
   .flag img{position:absolute;top:50%;left:50%;width:190%;height:190%;transform:translate(-50%,-50%);object-fit:cover}
   .flag .emoji-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;transform:scale(1.05,1.7)}
-  .mid{text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:56px}
-  .score{font-family:var(--mono);font-weight:800;font-size:1.05rem;color:var(--gold);letter-spacing:.02em}
+  .mid{text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:56px;padding-top:2px}
+  .score{font-family:var(--mono);font-weight:800;font-size:1.1rem;color:var(--gold);letter-spacing:.02em}
   .score.live-score{color:#fff}
-  .ko{font-family:var(--mono);font-weight:700;font-size:.8rem;color:#d9f2e5}
-  .cd{font-family:var(--mono);font-size:.58rem;font-weight:700;color:var(--gold);letter-spacing:.01em}
-  .pill{font-family:var(--mono);font-weight:800;font-size:.56rem;letter-spacing:.03em;background:var(--gold);color:var(--gold-text);padding:2px 8px;border-radius:999px}
+  .ko{font-family:var(--mono);font-weight:700;font-size:.82rem;color:#d9f2e5}
+  .cd{font-family:var(--mono);font-size:.6rem;font-weight:700;color:var(--gold);letter-spacing:.01em}
+  .pill{font-family:var(--mono);font-weight:800;font-size:.58rem;letter-spacing:.03em;background:var(--gold);color:var(--gold-text);padding:2px 8px;border-radius:999px}
   .pill.soft{background:rgba(255,255,255,.08);color:var(--muted);font-weight:700}
   .pill.live{background:var(--live);color:#fff;display:inline-flex;align-items:center;gap:4px}
   .pill.live::before{content:"";width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
   @keyframes blink{50%{opacity:.35}}
-  .minute{font-family:var(--mono);font-size:.6rem;color:var(--live);font-weight:700}
+  .minute{font-family:var(--mono);font-size:.62rem;color:var(--live);font-weight:700}
   .empty{color:var(--muted);text-align:center;padding:24px 6px;font-size:.75rem}
 
   /* ── mobile: smaller, shorter box that doesn't swallow the screen ──
@@ -85,42 +86,46 @@
      @media query miss on a real phone. */
   @media (max-width: 480px) {
     :root{
-      --pw: clamp(75px, 22vw, 95px);
+      /* Wider than before — grows only to the left since the box is
+         right-anchored (right:var(--xat-right) never changes). */
+      --pw: clamp(100px, 30vw, 130px);
       --xat-nav: 46px;
       --xat-right: 8px;
     }
     #app{
-      max-height: min(150px, calc(100vh - var(--xat-nav) - 30px));
+      /* Taller so more rows are visible before the list has to scroll —
+         there was empty space below the box before. */
+      max-height: min(230px, calc(100vh - var(--xat-nav) - 30px));
       border-radius: 10px;
     }
     .tabs{padding:4px 4px 3px;gap:3px}
-    .tab{font-size:.48rem;padding:3px 3px}
-    .team{font-size:.56rem}
-    .flag{width:14px;height:14px}
-    .flag img{width:140%;height:140%}
-    .score{font-size:.72rem}
-    .ko{font-size:.56rem}
-    .cd{font-size:.44rem}
-    .pill{font-size:.42rem;padding:1px 4px}
+    .tab{font-size:.5rem;padding:3px 3px}
+    .team{font-size:.58rem;gap:3px}
+    .flag{width:18px;height:18px}
+    .flag img{width:150%;height:150%}
+    .score{font-size:.78rem}
+    .ko{font-size:.6rem}
+    .cd{font-size:.46rem}
+    .pill{font-size:.44rem;padding:1px 4px}
   }
   html[data-mobile="1"]{
-    --pw: clamp(75px, 22vw, 95px) !important;
+    --pw: clamp(100px, 30vw, 130px) !important;
     --xat-nav: 46px !important;
     --xat-right: 8px !important;
   }
   html[data-mobile="1"] #app{
-    max-height: min(150px, calc(100vh - var(--xat-nav) - 30px)) !important;
+    max-height: min(230px, calc(100vh - var(--xat-nav) - 30px)) !important;
     border-radius: 10px !important;
   }
   html[data-mobile="1"] .tabs{padding:4px 4px 3px !important;gap:3px !important}
-  html[data-mobile="1"] .tab{font-size:.48rem !important;padding:3px 3px !important}
-  html[data-mobile="1"] .team{font-size:.56rem !important}
-  html[data-mobile="1"] .flag{width:14px !important;height:14px !important}
-  html[data-mobile="1"] .flag img{width:140% !important;height:140% !important}
-  html[data-mobile="1"] .score{font-size:.72rem !important}
-  html[data-mobile="1"] .ko{font-size:.56rem !important}
-  html[data-mobile="1"] .cd{font-size:.44rem !important}
-  html[data-mobile="1"] .pill{font-size:.42rem !important;padding:1px 4px !important}
+  html[data-mobile="1"] .tab{font-size:.5rem !important;padding:3px 3px !important}
+  html[data-mobile="1"] .team{font-size:.58rem !important;gap:3px !important}
+  html[data-mobile="1"] .flag{width:18px !important;height:18px !important}
+  html[data-mobile="1"] .flag img{width:150% !important;height:150% !important}
+  html[data-mobile="1"] .score{font-size:.78rem !important}
+  html[data-mobile="1"] .ko{font-size:.6rem !important}
+  html[data-mobile="1"] .cd{font-size:.46rem !important}
+  html[data-mobile="1"] .pill{font-size:.44rem !important;padding:1px 4px !important}
 </style>
 </head>
 <body>
@@ -313,7 +318,7 @@ function renderLive(){
               ? `<div class="pill live">EN VIVO</div>${lv.mt ? `<div class="minute">${lv.mt}</div>` : ''}`
               : `<div class="pill">Final</div>`}
           </div>
-          <div class="team away"><span>${aCode}</span>${flagEl(aCode)}</div>
+          <div class="team away">${flagEl(aCode)}<span>${aCode}</span></div>
         </div>
       </div>`;
   }).join('');
@@ -342,7 +347,7 @@ function renderUpcoming(){
           <div class="ko">${fmtKickoff(m.d)}</div>
           <div class="cd" data-k="${Date.parse(m.d)}"></div>
         </div>
-        <div class="team away"><span>${aCode || 'TBD'}</span>${flagEl(aCode)}</div>
+        <div class="team away">${flagEl(aCode)}<span>${aCode || 'TBD'}</span></div>
       </div>
     </div>`;
   }).join('');
