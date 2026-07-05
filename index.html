@@ -307,9 +307,9 @@ function tickCountdowns(){
     const hh = Math.floor(diff % 86400000 / 3600000);
     const mm = Math.floor(diff % 3600000 / 60000);
     const ss = Math.floor(diff % 60000 / 1000);
-    if(dd > 0)      el.textContent = `Empieza en ${dd}d ${hh}h`;
-    else if(hh > 0) el.textContent = `Empieza en ${hh}h ${String(mm).padStart(2,'0')}m`;
-    else            el.textContent = `Empieza en ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+    if(dd > 0)      el.textContent = `${dd}d ${hh}h`;
+    else if(hh > 0) el.textContent = `${hh}h ${String(mm).padStart(2,'0')}m`;
+    else            el.textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
   });
 }
 
